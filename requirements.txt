@@ -2,3 +2,7 @@ Django>=3.0.0,<3.1.0
 djangorestframework>=3.11.0,<3.12.0
 flake8>=3.6.0,<3.7.0
 psycopg2>=2.7.5,<2.8.0
+requests>=2.24.0,<2.25.0
+dj-rest-auth >=1.1.0,<1.2.0
+django-allauth >=0.42.0,<0.43.0
+pylibmc >=1.6.1,<1.6.2

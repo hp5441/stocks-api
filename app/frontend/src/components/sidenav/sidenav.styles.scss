@@ -1,0 +1,45 @@
+.sidenav {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 100%;
+  width: 160px;
+  position: fixed;
+  z-index: 5;
+  top: 0;
+  left: 0;
+  background-color: indianred;
+  padding-top: 20px;
+  overflow: hidden;
+
+  a {
+    padding: 15px 8px 15px 20px;
+    font-size: 15px;
+    color: #1d1c1c;
+    display: block;
+    &:hover {
+      background-color: rgb(202, 143, 143);
+      box-shadow: 0px -10px 20px rgba(0, 0, 0, 0.1),
+        0px 10px 20px rgba(0, 0, 0, 0.1), 0px 10px 20px rgba(0, 0, 0, 0.1),
+        0px -10px 20px rgba(0, 0, 0, 0.05);
+    }
+  }
+  .logo-container {
+    display: flex;
+    flex-direction: row;
+    .logo {
+      height: 50px;
+      width: 30px;
+      padding-left: 30px;
+      padding-bottom: 50px;
+    }
+    .logo-title{
+      padding-top: 20px;
+      padding-left: 20px;
+    }
+  }
+
+  .menu-icon {
+    padding-right: 10px;
+  }
+}

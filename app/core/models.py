@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
-                                    PermissionsMixin
+    PermissionsMixin
 
 
 class UserManager(BaseUserManager):
@@ -13,6 +13,14 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+    def create_social_user(self, email, **extra_fields):
+        if not email:
+            raise ValueError('valid email id was not inserted')
+        user = self.model(email=self.normalize_email(email), **extra_fields)
+        user.set_unusable_password()
+        user.save(using=self._db)
+        return user
+
     def create_superuser(self, email, password):
         if not email:
             raise ValueError('valid email id not entered')
@@ -20,7 +28,7 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.is_superuser = True
         user.is_staff = True
-        user.save(using=self.db)
+        user.save(using=self._db)
         return user
 
 

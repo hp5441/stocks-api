@@ -1,5 +1,6 @@
 [flake8]
 exclude =
+    frontend,
     migrations,
     __pychache__,
     manage.py,

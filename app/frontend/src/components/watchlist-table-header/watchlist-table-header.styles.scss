@@ -1,0 +1,27 @@
+.watchlist-header {
+  width: 100%;
+  .watchlist-header-table {
+    text-align: left;
+    width: 100%;
+    padding: 10px;
+    .watchlist-header-bar {
+      width: 100%;
+      display: flex;
+      padding: 10px 0;
+      .green-bar {
+        background-color: green;
+        height: 10px;
+        border-radius: 5px;
+      }
+      .red-bar {
+        background-color: red;
+        height: 10px;
+        border-radius: 5px;
+      }
+    }
+    .watchlist-header-bar-label {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}
