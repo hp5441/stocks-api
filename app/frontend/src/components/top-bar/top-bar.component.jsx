@@ -213,7 +213,7 @@ const PrimarySearchAppBar = (props) => {
                   }
                 >
                   {NIFTY.last_price}{" "}
-                  {NIFTY.change ? NIFTY.change.toFixed(2) : null}
+                  {NIFTY.change ? NIFTY.change.toFixed(2) : 0}
                 </span>{" "}
                 %
               </p>
@@ -246,7 +246,7 @@ const PrimarySearchAppBar = (props) => {
                   }
                 >
                   {SENSEX.last_price}{" "}
-                  {SENSEX.change ? SENSEX.change.toFixed(2) : null}
+                  {SENSEX.change ? SENSEX.change.toFixed(2) : 0}
                 </span>{" "}
                 %
               </p>

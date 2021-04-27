@@ -311,8 +311,8 @@ class StockPriceView(APIView):
         return Response(serialized_stock_price.data)
 
     def delete(self, request, scrip):
-        scrip = request.data['stock']
-        stock_price_data = StockPriceData.objects.all()
+        id = request.data['id']
+        stock_price_data = StockPriceData.objects.get(pk=id)
         """StockPriceData.objects.filter(
             stock=StockTable.objects.get(scrip=scrip))"""
         stock_price_data.delete()

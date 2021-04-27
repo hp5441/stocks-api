@@ -84,7 +84,8 @@ class SearchBar extends React.Component {
   handleSubmit = (e) => {
     const { stockAddStart, csrftoken, watchlist, watchlists } = this.props;
     e.preventDefault();
-    if (this.state.filteredStocks.length === 1) {
+    console.log(this.state.filteredStocks);
+    if (this.state.filteredStocks.length >= 1) {
       if (this.state.value in this.state.stockMap) {
         let check = true;
         watchlists[watchlist].watchlistStocks.forEach(
@@ -176,6 +177,7 @@ class SearchBar extends React.Component {
             clearOnEscape={true}
             clearOnBlur={true}
             onInputChange={this.handleChangeMat}
+            getOptionSelected={()=>true}
             style={{ width: "300px" }}
             renderInput={(params) => (
               <TextField {...params} label="Add Stock" variant="outlined" />

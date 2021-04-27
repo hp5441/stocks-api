@@ -24,6 +24,14 @@ const userReducer = (state = INITIAL_STATE, action) => {
         currentUser: null,
         error: null,
       };
+    case UserActionTypes.CHECK_USER_SESSION_FAILURE:
+      return {
+        currentUser: null,
+        stocks: [],
+        csrftoken: null,
+        error: null,
+        showModal: null,
+      };
     case UserActionTypes.SIGN_IN_FAILURE:
     case UserActionTypes.SIGN_OUT_FAILURE:
     case UserActionTypes.SIGN_UP_FAILURE:

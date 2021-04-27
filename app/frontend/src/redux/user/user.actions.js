@@ -49,6 +49,16 @@ export const checkUserSession = () => ({
   type: UserActionTypes.CHECK_USER_SESSION,
 });
 
+export const checkUserSessionSuccess = (user) => ({
+  type: UserActionTypes.CHECK_USER_SESSION_SUCCESS,
+  payload: user
+});
+
+export const checkUserSessionFailure = (error) => ({
+  type: UserActionTypes.CHECK_USER_SESSION_FAILURE,
+  payload: error
+});
+
 export const signOutStart = () => ({
   type: UserActionTypes.SIGN_OUT_START,
 });
