@@ -28,11 +28,11 @@ const PortfolioAllTableStock = ({
       <td>
         <Link to={`${url}/${id}`}>{scrip}</Link>
       </td>
-      <td>{ltp}</td>
+      <td>{ltp.toFixed(2)}</td>
       <td>{quantity}</td>
       <td>{avg_price.toFixed(2)}</td>
       <td>{amountInvested}</td>
-      <td>{change}</td>
+      <td>{change.toFixed(2)}</td>
       <td>{absoluteChangePercent}</td>
       <td>{currentNetworth}</td>
       <td>{todaysGainLoss}</td>

@@ -49,6 +49,9 @@ class StockDetailView(generics.ListCreateAPIView, mixins.UpdateModelMixin, mixin
 
 class StockPriceUpdateView(APIView):
 
+    def conv_change(self, current_price, percent):
+        return (current_price*percent)/(100+percent)
+
     def put(self, request):
         price_data = request.data
         print(price_data)
@@ -68,8 +71,8 @@ class StockPriceUpdateView(APIView):
             if stocksData[i]:
                 stocksData[i].ltp = float(
                     price_data[price_data_keys[i]]['ltp']) if price_data[price_data_keys[i]]['ltp'] else stocksData[i].ltp
-                stocksData[i].change = float(
-                    price_data[price_data_keys[i]]['change']) if price_data[price_data_keys[i]]['change'] else stocksData[i].change
+                stocksData[i].change = self.conv_change(price_data[price_data_keys[i]]['ltp'], price_data[price_data_keys[i]]['change']
+                                                        ) if price_data[price_data_keys[i]]['change'] and price_data[price_data_keys[i]]['ltp'] else stocksData[i].change
             else:
                 noData.append(i)
         for i in noData:
