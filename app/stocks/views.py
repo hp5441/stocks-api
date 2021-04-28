@@ -54,7 +54,7 @@ class StockPriceUpdateView(APIView):
 
     def put(self, request):
         price_data = request.data
-        print(price_data)
+        # print(price_data)
         price_data_keys = list(price_data.keys())
 
         stocksData = []
@@ -246,6 +246,22 @@ class StockTransactionDetailView(APIView):
         transaction_serialized = StockTransactionsSerializer(stock_transaction)
         return Response(transaction_serialized.data)
 
+    def put(self, request):
+        transaction = StockTransactions.objects.get(pk=request.data["id"])
+        transaction.date = datetime.strptime(
+            request.data['date'], "%Y-%m-%d").date()
+        transaction.price = request.data['price']
+        transaction.quantity = request.data['quantity']
+        transaction.transaction_type = request.data['type']
+        transaction.save()
+        transaction_serialized = StockTransactionsSerializer(transaction)
+        return Response(transaction_serialized.data)
+
+    def delete(self, request):
+        transaction = StockTransactions.objects.get(pk=request.data["id"])
+        transaction.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class StockNewsView(APIView):
     serializer_class = StockNewsSerializer
@@ -332,7 +348,15 @@ class MultiStockNewsView(APIView):
         for scrip in stocklist[1:]:
             filtered_news = filtered_news | StockNews.objects.filter(
                 stock=StockTable.objects.get(scrip=scrip)).order_by("-date")[:10]
-        filtered_news.order_by("-date")
         serialized_filtered_stocks = StockNewsSerializer(
             filtered_news, many=True)
         return Response(serialized_filtered_stocks.data)
+
+
+class PortfolioStockDeleteView(APIView):
+
+    def delete(self, request):
+        id = request.data['pstock_id']
+        portfolio_stock = PortfolioStock.objects.get(pk=id)
+        portfolio_stock.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

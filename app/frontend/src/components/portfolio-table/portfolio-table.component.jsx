@@ -14,7 +14,7 @@ import { Route, Switch, useRouteMatch } from "react-router";
 import { portfolioFetchStart } from "../../redux/portfolio/portfolio.actions";
 import { showModal } from "../../redux/user/user.actions";
 import { filterOpenTransactions } from "../../utils/portfolio.utils";
-import AddTransactionModal from "../add-transaction-modal/add-transaction-modal.component";
+import AddTransactionModal from "../transaction-modal/add-transaction-modal.component";
 import NewsTab from "../news-tab/news-tab.component";
 import PstockPage from "../portfolio-stock-page/portfolio-stock-page.component";
 import PortfolioTableHeader from "../portfolio-table-header/portfolio-table-header.component";

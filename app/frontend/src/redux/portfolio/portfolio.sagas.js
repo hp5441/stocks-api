@@ -1,9 +1,12 @@
 import { takeLatest, all, call, put } from "@redux-saga/core/effects";
 import {
   addTransaction,
+  updateTransaction,
   fetchNews,
   fetchTransactions,
   fetchUserPortfolio,
+  deleteTransaction,
+  deletePortfolioStock,
 } from "../../utils/portfolio.utils";
 import {
   fetchNewsFailure,
@@ -14,6 +17,12 @@ import {
   portfolioFetchSuccess,
   portfolioStockTransactionFailure,
   portfolioStockTransactionSuccess,
+  portfolioStockTransactionUpdateSuccess,
+  portfolioStockTransactionUpdateFailure,
+  portfolioStockTransactionDeleteSuccess,
+  portfolioStockTransactionDeleteFailure,
+  portfolioStockDeleteSuccess,
+  portfolioStockDeleteFailure,
 } from "./portfolio.actions";
 import { portfolioActionTypes } from "./portfolio.types";
 
@@ -51,6 +60,52 @@ export function* addStockTransaction({
   }
 }
 
+export function* updateStockTransaction({
+  payload: { transactionDetails, csrftoken, stockDetails },
+}) {
+  try {
+    const transaction = yield updateTransaction({
+      ...transactionDetails,
+      csrftoken,
+    });
+    yield put(
+      portfolioStockTransactionUpdateSuccess({ ...transaction, stockDetails })
+    );
+  } catch (error) {
+    yield put(portfolioStockTransactionUpdateFailure(error));
+  }
+}
+
+export function* deleteStockTransaction({
+  payload: { transactionDetails, csrftoken },
+}) {
+  try {
+    yield deleteTransaction({
+      ...transactionDetails,
+      csrftoken,
+    });
+    yield put(
+      portfolioStockTransactionDeleteSuccess({ ...transactionDetails })
+    );
+  } catch (error) {
+    yield put(portfolioStockTransactionDeleteFailure(error));
+  }
+}
+
+export function* deleteUserPortfolioStock({
+  payload: { portfolioStockDetails, csrftoken },
+}) {
+  try {
+    yield deletePortfolioStock({
+      ...portfolioStockDetails,
+      csrftoken,
+    });
+    yield put(portfolioStockDeleteSuccess({ ...portfolioStockDetails }));
+  } catch (error) {
+    yield put(portfolioStockDeleteFailure(error));
+  }
+}
+
 export function* fetchStockNews({ payload: { stockDetails, csrftoken } }) {
   try {
     const news = yield fetchNews(stockDetails, csrftoken);
@@ -78,6 +133,27 @@ export function* onTransactionAddStart() {
   );
 }
 
+export function* onTransactionUpdateStart() {
+  yield takeLatest(
+    portfolioActionTypes.PORTFOLIO_STOCK_TRANSACTION_UPDATE_START,
+    updateStockTransaction
+  );
+}
+
+export function* onTransactionDeleteStart() {
+  yield takeLatest(
+    portfolioActionTypes.PORTFOLIO_STOCK_TRANSACTION_DELETE_START,
+    deleteStockTransaction
+  );
+}
+
+export function* onPortfolioStockDeleteStart() {
+  yield takeLatest(
+    portfolioActionTypes.PORTFOLIO_STOCK_DELETE_START,
+    deleteUserPortfolioStock
+  );
+}
+
 export function* onNewsFetchStart() {
   yield takeLatest(portfolioActionTypes.FETCH_NEWS_START, fetchStockNews);
 }
@@ -87,6 +163,9 @@ export function* portfolioSagas() {
     call(onPortfolioFetchStart),
     call(onTransactionsFetchStart),
     call(onTransactionAddStart),
+    call(onTransactionUpdateStart),
+    call(onTransactionDeleteStart),
+    call(onPortfolioStockDeleteStart),
     call(onNewsFetchStart),
   ]);
 }

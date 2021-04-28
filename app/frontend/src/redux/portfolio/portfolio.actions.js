@@ -29,6 +29,51 @@ export const portfolioStockTransactionFailure = (error) => ({
   payload: error,
 });
 
+export const portfolioStockTransactionUpdateStart = (stockDetails) => ({
+  type: portfolioActionTypes.PORTFOLIO_STOCK_TRANSACTION_UPDATE_START,
+  payload: stockDetails,
+});
+
+export const portfolioStockTransactionUpdateSuccess = (stockDetails) => ({
+  type: portfolioActionTypes.PORTFOLIO_STOCK_TRANSACTION_UPDATE_SUCCESS,
+  payload: stockDetails,
+});
+
+export const portfolioStockTransactionUpdateFailure = (error) => ({
+  type: portfolioActionTypes.PORTFOLIO_STOCK_TRANSACTION_UPDATE_FAILURE,
+  payload: error,
+});
+
+export const portfolioStockTransactionDeleteStart = (stockDetails) => ({
+  type: portfolioActionTypes.PORTFOLIO_STOCK_TRANSACTION_DELETE_START,
+  payload: stockDetails,
+});
+
+export const portfolioStockTransactionDeleteSuccess = (stockDetails) => ({
+  type: portfolioActionTypes.PORTFOLIO_STOCK_TRANSACTION_DELETE_SUCCESS,
+  payload: stockDetails,
+});
+
+export const portfolioStockTransactionDeleteFailure = (error) => ({
+  type: portfolioActionTypes.PORTFOLIO_STOCK_TRANSACTION_DELETE_FAILURE,
+  payload: error,
+});
+
+export const portfolioStockDeleteStart = (stockDetails) => ({
+  type: portfolioActionTypes.PORTFOLIO_STOCK_DELETE_START,
+  payload: stockDetails,
+});
+
+export const portfolioStockDeleteSuccess = (stockDetails) => ({
+  type: portfolioActionTypes.PORTFOLIO_STOCK_DELETE_SUCCESS,
+  payload: stockDetails,
+});
+
+export const portfolioStockDeleteFailure = (error) => ({
+  type: portfolioActionTypes.PORTFOLIO_STOCK_DELETE_FAILURE,
+  payload: error,
+});
+
 export const fetchTransactionStart = (stockDetails) => ({
   type: portfolioActionTypes.FETCH_TRANSACTION_START,
   payload: stockDetails,

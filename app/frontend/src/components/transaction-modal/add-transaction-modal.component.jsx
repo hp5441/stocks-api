@@ -11,7 +11,10 @@ import { Autocomplete } from "@material-ui/lab";
 import { KeyboardDatePicker } from "@material-ui/pickers";
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { portfolioStockTransactionStart } from "../../redux/portfolio/portfolio.actions";
+import {
+  portfolioStockTransactionStart,
+  portfolioStockTransactionUpdateStart,
+} from "../../redux/portfolio/portfolio.actions";
 import { closeModal } from "../../redux/user/user.actions";
 import ModalWrapper from "../modal-wrapper/modal-wrapper.component";
 
@@ -26,19 +29,26 @@ const AddTransactionModal = (props) => {
     portfolio,
     csrftoken,
     addTransaction,
+    editTransaction,
   } = props;
 
   const [stockId, setStockId] = useState(
     modal.pstock_id ? modal.pstock_id : ""
   );
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(
+    modal.date ? new Date(modal.date) : new Date()
+  );
   const [stockValue, setStockValue] = useState(
     modal.pstock_id ? modal.name : null
   );
   const [filteredStocks, setFilteredStocks] = useState([]);
-  const [transactionType, setTransactionType] = useState("B");
-  const [transactionQuantity, setTransactionQuantity] = useState("");
-  const [price, setPrice] = useState("");
+  const [transactionType, setTransactionType] = useState(
+    modal.transactionType ? modal.transactionType : "B"
+  );
+  const [transactionQuantity, setTransactionQuantity] = useState(
+    modal.quantity ? modal.quantity : ""
+  );
+  const [price, setPrice] = useState(modal.price ? modal.price : "");
 
   useEffect(() => {
     if (portfolio && filteredStocks.length === 1) {
@@ -92,21 +102,28 @@ const AddTransactionModal = (props) => {
 
       console.log(transactions[stockId]);
       //creating a temporary array to check if its feasible to add transaction
-      transactions[stockId].forEach(({ date: tDate }) => {
+
+      let tempTransactions = [...transactions[stockId]];
+
+      if (modal.modalType ? modal.modalType === "editTransaction" : null) {
+        tempTransactions = tempTransactions.filter(({ id }) => {
+          return id !== modal.id;
+        });
+      }
+
+      tempTransactions.forEach(({ date: tDate }) => {
         if (new Date(tDate).getTime() <= date.getTime()) index += 1;
         console.log(index, "from temp");
       });
 
-      const tempTranasactions = [...transactions[stockId]];
-
-      tempTranasactions.splice(index, 0, {
+      tempTransactions.splice(index, 0, {
         transaction_type: transactionType,
         quantity: transactionQuantity,
       });
 
-      console.log(tempTranasactions, "from temp");
+      console.log(tempTransactions, "from temp");
       let checkNegative = 0;
-      tempTranasactions.forEach(({ transaction_type, quantity }) => {
+      tempTransactions.forEach(({ transaction_type, quantity }) => {
         if (transaction_type === "B") {
           checkNegative += quantity;
         } else {
@@ -119,18 +136,34 @@ const AddTransactionModal = (props) => {
       });
       if (checkNegative >= 0) {
         const [portfolioId, scrip] = stockId.split("_");
-        addTransaction(
-          {
-            portfolio_id: parseInt(portfolioId),
-            stock: scrip,
-            date: date.toISOString().slice(0, 10),
-            price: parseInt(price),
-            quantity: parseInt(transactionQuantity),
-            type: transactionType,
-          },
-          csrftoken,
-          filteredStocks[0]
-        );
+        if (modal.modalType === "addTransaction") {
+          addTransaction(
+            {
+              portfolio_id: parseInt(portfolioId),
+              stock: scrip,
+              date: date.toISOString().slice(0, 10),
+              price: parseInt(price),
+              quantity: parseInt(transactionQuantity),
+              type: transactionType,
+            },
+            csrftoken,
+            filteredStocks[0]
+          );
+        } else if (modal.modalType === "editTransaction") {
+          editTransaction(
+            {
+              portfolio_id: parseInt(portfolioId),
+              stock: scrip,
+              id: modal.id,
+              date: date.toISOString().slice(0, 10),
+              price: parseInt(price),
+              quantity: parseInt(transactionQuantity),
+              type: transactionType,
+            },
+            csrftoken,
+            filteredStocks[0]
+          );
+        }
       }
     } else if (stockId && transactions && !transactions[stockId]) {
       if (transactionType === "S") {
@@ -138,18 +171,34 @@ const AddTransactionModal = (props) => {
         return null;
       } else {
         const [portfolioId, scrip] = stockId.split("_");
-        addTransaction(
-          {
-            portfolio_id: parseInt(portfolioId),
-            stock: scrip,
-            date: date.toISOString().slice(0, 10),
-            price: parseInt(price),
-            quantity: parseInt(transactionQuantity),
-            type: transactionType,
-          },
-          csrftoken,
-          filteredStocks[0]
-        );
+        if (modal.modalType === "addTransaction") {
+          addTransaction(
+            {
+              portfolio_id: parseInt(portfolioId),
+              stock: scrip,
+              date: date.toISOString().slice(0, 10),
+              price: parseInt(price),
+              quantity: parseInt(transactionQuantity),
+              type: transactionType,
+            },
+            csrftoken,
+            filteredStocks[0]
+          );
+        } else if (modal.modalType === "editTransaction") {
+          editTransaction(
+            {
+              portfolio_id: parseInt(portfolioId),
+              stock: scrip,
+              id: modal.id,
+              date: date.toISOString().slice(0, 10),
+              price: parseInt(price),
+              quantity: parseInt(transactionQuantity),
+              type: transactionType,
+            },
+            csrftoken,
+            filteredStocks[0]
+          );
+        }
       }
     }
     closeModal();
@@ -264,6 +313,15 @@ const mapDispatchToProps = (dispatch) => ({
   addTransaction: (transactionDetails, csrftoken, stockDetails) => {
     dispatch(
       portfolioStockTransactionStart({
+        transactionDetails,
+        csrftoken,
+        stockDetails,
+      })
+    );
+  },
+  editTransaction: (transactionDetails, csrftoken, stockDetails) => {
+    dispatch(
+      portfolioStockTransactionUpdateStart({
         transactionDetails,
         csrftoken,
         stockDetails,

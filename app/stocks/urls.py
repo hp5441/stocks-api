@@ -25,4 +25,6 @@ urlpatterns = [
          views.StockPriceView.as_view(), name="stock_price"),
     path("stocknewsrange/", views.MultiStockNewsView.as_view(),
          name="stock_news_items"),
+    path("portfoliostockdelete/", views.PortfolioStockDeleteView.as_view(),
+         name="portfolio_stock_delete")
 ]

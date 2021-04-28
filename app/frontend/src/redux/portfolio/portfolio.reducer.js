@@ -18,6 +18,26 @@ const portfolioReducer = (state = INITIAL_STATE, action) => {
         isLoading: true,
         error: null,
       };
+    case portfolioActionTypes.PORTFOLIO_STOCK_TRANSACTION_UPDATE_START:
+      return {
+        ...state,
+        transactionChanges: true,
+        isLoading: true,
+        error: null,
+      };
+    case portfolioActionTypes.PORTFOLIO_STOCK_TRANSACTION_DELETE_START:
+      return {
+        ...state,
+        transactionChanges: true,
+        isLoading: true,
+        error: null,
+      };
+    case portfolioActionTypes.PORTFOLIO_STOCK_DELETE_START:
+      return {
+        ...state,
+        isLoading: true,
+        error: null,
+      };
     case portfolioActionTypes.PORTFOLIO_FETCH_START:
       return {
         ...state,
@@ -64,6 +84,53 @@ const portfolioReducer = (state = INITIAL_STATE, action) => {
         isLoading: false,
         error: null,
       };
+    case portfolioActionTypes.PORTFOLIO_STOCK_TRANSACTION_UPDATE_SUCCESS:
+      const pstock_id =
+        action.payload.portfolio.toString() + "_" + action.payload.stock;
+      if (pstock_id in state.transactions) {
+        state.transactions[pstock_id] = state.transactions[pstock_id].filter(
+          ({ id }) => {
+            return id !== action.payload.id;
+          }
+        );
+        state.transactions[pstock_id].push(action.payload);
+      }
+      return {
+        ...state,
+        transactionChanges: false,
+        isLoading: false,
+        error: null,
+      };
+    case portfolioActionTypes.PORTFOLIO_STOCK_TRANSACTION_DELETE_SUCCESS:
+      if (action.payload.pstock_id in state.transactions) {
+        state.transactions[action.payload.pstock_id] = state.transactions[
+          action.payload.pstock_id
+        ].filter(({ id }) => {
+          return id !== action.payload.id;
+        });
+      }
+      return {
+        ...state,
+        transactionChanges: false,
+        isLoading: false,
+        error: null,
+      };
+    case portfolioActionTypes.PORTFOLIO_STOCK_DELETE_SUCCESS:
+      Object.values(state.portfolio)[0].portfolioStocks = Object.values(
+        state.portfolio
+      )[0].portfolioStocks.filter(({ pstock_id }) => {
+        return pstock_id !== action.payload.pstock_id;
+      });
+      delete state.transactions[action.payload.pstock_id];
+      const portfolioStock = action.payload.pstock_id.split("_")[1];
+      state.newsItems = state.newsItems.filter(
+        ({ stock }) => portfolioStock !== stock
+      );
+      return {
+        ...state,
+        isLoading: false,
+        error: null,
+      };
     case portfolioActionTypes.FETCH_NEWS_SUCCESS:
       return {
         ...state,
@@ -72,6 +139,7 @@ const portfolioReducer = (state = INITIAL_STATE, action) => {
     case portfolioActionTypes.PORTFOLIO_FETCH_FAILURE:
     case portfolioActionTypes.FETCH_TRANSACTION_FAILURE:
     case portfolioActionTypes.PORTFOLIO_STOCK_TRANSACTION_FAILURE:
+    case portfolioActionTypes.PORTFOLIO_STOCK_TRANSACTION_UPDATE_FAILURE:
       return {
         ...state,
         error: action.payload,

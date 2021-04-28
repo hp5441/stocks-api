@@ -1,18 +1,24 @@
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  IconButton,
 } from "@material-ui/core";
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Redirect, useParams } from "react-router";
+import { showModal } from "../../redux/user/user.actions";
+import AddTransactionModal from "../transaction-modal/add-transaction-modal.component";
 import GraphTab from "../real-stock-graph-tab/real-stock-graph-tab.component";
 import Tabs from "../tabs/tabs.component";
 
 import "./portfolio-stock-page.styles.scss";
+import DeleteTransactionModal from "../transaction-modal/delete-transaction-modal.component";
 
 const PstockPage = (props) => {
-  const { portfolio, transactions } = props;
+  const { portfolio, transactions, modal, showModal } = props;
   const { pstockId } = useParams();
 
   const [currentTab, setCurrentTab] = useState("transaction history");
@@ -40,35 +46,87 @@ const PstockPage = (props) => {
     });
   }
 
-  const TransactionRow = ({ date, transaction_type, quantity, price }) => (
+  const TransactionRow = ({
+    date,
+    transaction_type,
+    quantity,
+    price,
+    pstockId,
+    id,
+  }) => (
     <tr>
       <td>{date}</td>
       <td>{transaction_type === "B" ? "Buy" : "Sell"}</td>
       <td>{quantity}</td>
       <td>{price}</td>
       <td>{quantity * price}</td>
-      <td></td>
+      <td>
+        <IconButton
+          size="small"
+          onClick={() => {
+            showModal({
+              pstock_id: pstockId,
+              id: id,
+              modalType: "editTransaction",
+              name: portfolioStock.stock.name,
+              date,
+              transaction_type,
+              quantity,
+              price,
+              stock: portfolioStock.stock,
+            });
+          }}
+        >
+          <FontAwesomeIcon icon={faEdit} />
+        </IconButton>
+        <IconButton
+          size="small"
+          onClick={() => {
+            showModal({
+              pstock_id: pstockId,
+              id: id,
+              modalType: "deleteTransaction",
+            });
+          }}
+        >
+          <FontAwesomeIcon icon={faTrash} />
+        </IconButton>
+      </td>
     </tr>
   );
 
   const transactionHistory = (
-    <table className="portfolio-stock-table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Type</th>
-          <th>Quantity</th>
-          <th>Unit Price</th>
-          <th>Amount</th>
-          <th>Select All</th>
-        </tr>
-      </thead>
-      <tbody>
-        {transactions[pstockId].map((transaction) => {
-          return <TransactionRow {...transaction} />;
-        })}
-      </tbody>
-    </table>
+    <div>
+      <table className="portfolio-stock-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Amount</th>
+            <th>Select All</th>
+          </tr>
+        </thead>
+        <tbody>
+          {transactions[pstockId]
+            ? transactions[pstockId].map((transaction) => {
+                return <TransactionRow {...transaction} pstockId={pstockId} />;
+              })
+            : null}
+        </tbody>
+      </table>
+      {modal ? (
+        modal.modalType === "editTransaction" ? (
+          <AddTransactionModal />
+        ) : null
+      ) : null}
+      {modal ? (
+        modal.modalType === "deleteTransaction" ? (
+          <DeleteTransactionModal />
+        ) : null
+      ) : null}
+    </div>
   );
 
   const profitLossStock = (
@@ -124,9 +182,17 @@ const PstockPage = (props) => {
 };
 
 const mapStateToProps = ({
+  userReducer: { showModal },
   portfolioReducer: { portfolio, transactions },
 }) => ({
   portfolio: portfolio,
   transactions: transactions,
+  modal: showModal,
 });
-export default connect(mapStateToProps)(PstockPage);
+
+const mapDispatchToProps = (dispatch) => ({
+  showModal: (modal) => {
+    dispatch(showModal(modal));
+  },
+});
+export default connect(mapStateToProps, mapDispatchToProps)(PstockPage);

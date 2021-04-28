@@ -61,6 +61,13 @@ class PortfolioStock(models.Model):
     class Meta:
         unique_together = [['portfolio', 'stock']]
 
+    def delete(self, *args, **kwargs):
+        portfolio, stock = self.pstock_id.split("_")
+        transactions = StockTransactions.objects.filter(
+            portfolio=portfolio, stock=StockTable.objects.get(scrip=stock))
+        transactions.delete()
+        super().delete(*args, **kwargs)
+
 
 class PortfolioGraph(models.Model):
     Portfolio = models.ForeignKey(

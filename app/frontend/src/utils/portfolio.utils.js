@@ -21,6 +21,51 @@ export const addTransaction = async ({ csrftoken, ...transactionDetails }) => {
   return transaction;
 };
 
+export const updateTransaction = async ({
+  csrftoken,
+  ...transactionDetails
+}) => {
+  const transaction = await fetch("/api/stock/transactionsdetail/", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": csrftoken,
+    },
+    body: JSON.stringify(transactionDetails),
+  }).then((res) => res.json());
+  return transaction;
+};
+
+export const deleteTransaction = async ({
+  csrftoken,
+  ...transactionDetails
+}) => {
+  const statusCode = await fetch("/api/stock/transactionsdetail/", {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": csrftoken,
+    },
+    body: JSON.stringify(transactionDetails),
+  });
+  return statusCode;
+};
+
+export const deletePortfolioStock = async ({
+  csrftoken,
+  ...portfolioStockDetails
+}) => {
+  const statusCode = await fetch("/api/stock/portfoliostockdelete/", {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": csrftoken,
+    },
+    body: JSON.stringify(portfolioStockDetails),
+  });
+  return statusCode;
+};
+
 export const fetchTransactions = async (portfolio_id) => {
   const transactions = await fetch(
     `/api/stock/transactions/?p_id=${portfolio_id}`
@@ -96,14 +141,14 @@ export const filterOpenTransactions = (transactions) => {
 };
 
 export const fetchNews = async (stocks, csrftoken) => {
-  console.log({stocks});
+  console.log({ stocks });
   const news = await fetch("/api/stock/stocknewsrange/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "X-CSRFToken": csrftoken,
     },
-    body: JSON.stringify({ 'stocks': stocks }),
+    body: JSON.stringify({ stocks: stocks }),
   }).then((res) => res.json());
 
   return news;
