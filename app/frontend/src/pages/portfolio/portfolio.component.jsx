@@ -16,13 +16,7 @@ const WrappedPortfolioTable = withSpinner(PortfolioTable);
 
 const Portfolio = (props) => {
   const ws = useContext(WebSocketContext);
-  const {
-    loading,
-    fetchPortfolio,
-    fetchTransactions,
-    portfolio,
-    closeModal,
-  } = props;
+  const { loading, fetchPortfolio, fetchTransactions, portfolio } = props;
 
   const portfolioLength = Object.keys(portfolio)[0];
   console.log(portfolioLength, "hh");

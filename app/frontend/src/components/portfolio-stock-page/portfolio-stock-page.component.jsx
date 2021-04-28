@@ -111,7 +111,13 @@ const PstockPage = (props) => {
         <tbody>
           {transactions[pstockId]
             ? transactions[pstockId].map((transaction) => {
-                return <TransactionRow {...transaction} pstockId={pstockId} />;
+                return (
+                  <TransactionRow
+                    key={transaction.id}
+                    {...transaction}
+                    pstockId={pstockId}
+                  />
+                );
               })
             : null}
         </tbody>
@@ -177,7 +183,7 @@ const PstockPage = (props) => {
       </div>
     );
   } else {
-    return <Redirect to="/not-found" />;
+    return <Redirect to="/portfolio" />;
   }
 };
 

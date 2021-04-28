@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
-import { Redirect } from "react-router";
 import {
   portfolioStockDeleteStart,
   portfolioStockTransactionDeleteStart,
@@ -18,14 +17,6 @@ const DeleteTransactionModal = (props) => {
     closeModal,
     deletePortfolioStock,
   } = props;
-
-  const [deletedStock, setDeletedStock] = useState(false);
-
-  useEffect(() => {
-    if (deletedStock) {
-      <Redirect push to="/portfolio" />;
-    }
-  }, [deletedStock]);
 
   const handleClick = (e) => {
     console.log(modal);
@@ -66,7 +57,6 @@ const DeleteTransactionModal = (props) => {
           );
         } else {
           deletePortfolioStock({ pstock_id: modal.pstock_id }, csrftoken);
-          setDeletedStock(true);
         }
       }
     }

@@ -1,4 +1,4 @@
-import { faEdit, faRupeeSign, faSort } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faSort } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Checkbox,
