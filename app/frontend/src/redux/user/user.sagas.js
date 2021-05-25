@@ -89,6 +89,7 @@ export function* signOut() {
   try {
     yield signOutUser();
     yield put(signOutSuccess());
+    yield localStorage.clear();
   } catch (error) {
     yield put(signOutFailure(error));
   }

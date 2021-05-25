@@ -61,6 +61,7 @@ const portfolioReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         transactions: action.payload,
+        isLoading: false,
         error: null,
       };
     case portfolioActionTypes.PORTFOLIO_STOCK_TRANSACTION_SUCCESS:

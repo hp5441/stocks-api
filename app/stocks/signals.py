@@ -3,7 +3,7 @@ from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 
-from stocks.models import WatchList, WatchListStock, StockTable, StockTransactions, Portfolio
+from stocks.models import WatchList, WatchListStock, StockTable, StockTransactions, Portfolio, StockTransactions, StockPriceData
 
 stocks = ['RELIANCE', 'MBLINFRA', 'ROSSARI', 'CAMS']
 
@@ -39,3 +39,15 @@ def stock_save_handler(sender, instance, created, **kwargs):
     stock_details['change'] = instance.change
     cache.set(instance.scrip, stock_details, 300)
     print(cache.get(instance.scrip))"""
+
+
+"""@receiver(post_save, sender=StockTransactions)
+def portfolio_graph_update(sender, instance, created, **kwargs):
+    if created:
+        portfolio_transactions = StockTransactions.objects.filter(
+            portfolio=instance.portfolio).order_by("date")
+        stocks_set = set()
+        for transaction in portfolio_transactions:
+            stocks_set.add(transaction.stock)
+        
+        for transaction in """

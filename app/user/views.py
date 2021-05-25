@@ -1,5 +1,8 @@
 import requests
 import json
+import os
+
+from dotenv import load_dotenv
 
 from django.shortcuts import redirect
 from django.contrib.auth import get_user_model, authenticate, login
@@ -16,9 +19,10 @@ from dj_rest_auth.registration.views import SocialLoginView
 
 from user.serializers import UserSerializer, AuthTokenSerializer, SocialUserSerializer
 
-CLIENT_ID = '455912657305-qf9hdslu6r8fhlssiku16mptuasmjedb.apps.googleusercontent.com'
-# Read from a file or environmental variable in a real app
-CLIENT_SECRET = '249PgOiOPWrd_fUJy_K9Rp7_'
+config = load_dotenv()
+
+CLIENT_ID = os.getenv('CLIENT_ID')
+CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 SCOPE = 'https://www.googleapis.com/auth/userinfo.email'
 REDIRECT_URI = 'http://localhost:8000/api/user/oauth2callback/'
 
