@@ -24,7 +24,7 @@
     "date-fns": "^2.21.0",
     "jquery": "^3.6.0",
     "jsonwebtoken": "^8.5.1",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-chartjs-2": "^3.0.2",
